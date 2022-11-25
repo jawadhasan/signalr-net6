@@ -6,7 +6,7 @@ This project contains Web Client (HTML/JS/CSS)
 ## nodeSignalR
 Nodejs client demo
 
-##SignalRBasicSetup
+## SignalRBasicSetup
 SignalR HUB (Server/WebAPI)
 
 
