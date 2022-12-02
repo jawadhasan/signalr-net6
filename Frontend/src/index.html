@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <base href="/">
-  <title>Device Manager</title>
+  <title>Demo APP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
   <!-- Style Sheets -->
@@ -14,16 +14,104 @@
 <body class="container-fluid">
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light border">
-    <a class="navbar-brand" href="/">
-      Device Manager
-    </a>
+    <a class="navbar-brand" href="/">Demo APP</a>
   </nav>
 
-  <div id="indexPage">  
-   
-      <div class="col-md-4">    
-        <p data-bind="text: title"></p>
-      </div>  
+  <div id="indexPage">
+
+    <div class="alert alert-primary" role="alert" data-bind="text:pageAlert">      
+    </div>
+
+    <div class="row">
+
+      <!-- Chat Area -->
+      <div id="chatArea" class="col col-md-12  bg-light">
+
+        <div class="bg-dark">
+          <span data-bind="text: title" class="text-white"></span>&nbsp; 
+          <span class="fa fa-signal text-success" data-bind="visible:signalRConnected"></span>
+         
+
+          <h4 data-bind="text:`Welcome ` + `${nick()}`, visible:isJoined" class="text-white"></h4>
+          <!-- <span class="btn btn-primary" data-bind="visible: isJoined(), click: leave">Leave</span> -->
+        </div>
+      
+        <!-- NickName & Join -->
+        <div class="form-inline">
+          <input required class="form-control" id="inputText" type="input"
+            data-bind="value:nick, valueUpdate: 'afterkeydown', visible: !isJoined()" placeholder="Enter Nick Name" />
+
+          <button class="btn btn-primary" data-bind="visible: !isJoined(), enable: nick().length > 0, click: join">Join</button>
+        </div>      
+
+
+        <!-- Chat Messages block -->
+        <div id="messages" data-bind="foreach: chatMessages">
+          <div>
+           
+
+            <span class="fa fa-clock"></span>
+            <span class="date" data-bind="text: displayDate"></span>
+
+            <span class="message" data-bind="if: eventType == 2">
+              <span class="user" data-bind="text: user, css: { you: user == `${$parent.nick()}` }"></span>&gt;
+
+              <span class="text" data-bind="text: text"></span>
+            </span>
+
+            <span class="join" data-bind="if: eventType == 0">
+              <span class="user" data-bind="text: user"></span> joins the room.
+            </span>
+
+            <span class="leave" data-bind="if: eventType == 1">
+              <!-- or eventType == 'LEAVE' -->
+              <span class="user" data-bind="text: user"></span> leaves the room.
+            </span>
+
+          </div>
+        </div>
+
+        <!-- Send Message -->
+        <form class="form-inline" id="inputForm" data-bind="submit: say, visible:isJoined">
+          <input class="form-control" id="inputText" type="input" data-bind="enable: isJoined, value: messageText"
+            placeholder="Type your message here" />
+          <input class="btn btn-primary" type="submit" value="Send" data-bind="enable: isJoined" />
+          <button class="btn btn-warning" data-bind="click: clearChat">Clear</button>
+          <button class="btn btn-info" data-bind="visible: isJoined(), click: getChatHistory">Chat-History</button>
+        </form>
+
+
+<hr />
+
+
+      </div>
+    <!-- End Chat Area -->
+
+
+
+    </div>
+
+
+
+    <div data-bind="visible:!isDebug">
+      <hr />
+
+      <div class="form">
+        <form data-bind="submit: sendinput">
+          <fieldset><input type="text" data-bind="value: myinput" placeholder="enter message" /></fieldset>
+        </form>
+      </div>
+      <ul data-bind="foreach: messages">
+        <li>
+          <span data-bind="text: $index"></span>:
+          <span data-bind="text: $data" class="white"></span>
+        </li>
+      </ul>
+
+    </div>
+
+  </div>
+
   </div>
 
   <!-- App Code -->

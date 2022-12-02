@@ -1,0 +1,29 @@
+
+
+#chatArea{
+    margin-top: 8px;
+    margin-left: 14px;
+}
+#messages {  
+    height: calc(100vh - 400px);    
+    overflow: scroll;
+    font-family: Arial, Verdana, sans-serif;
+    font-size: 14pt;  
+    /* background-color: antiquewhite; */
+    display: flex;
+    flex-direction: column-reverse;
+}
+ 
+#messages .user { font-style: oblique; }
+#messages .message .user { font-style: normal; }
+#messages .you { font-weight: bold; }
+#messages .join { color: green; }
+#messages .leave { color: red; }
+#messages .date { font-family: monospace; padding-right: 6px; }
+
+
+#inputForm{
+    padding-top: 8px;
+
+}
+
