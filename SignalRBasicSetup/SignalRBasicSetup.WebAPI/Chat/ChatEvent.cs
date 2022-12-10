@@ -6,7 +6,9 @@
     {
         JOIN,
         LEAVE,
-        MESSAGE
+        MESSAGE,
+
+        SignalRConnected = 100
     }
     public class ChatEvent
     {

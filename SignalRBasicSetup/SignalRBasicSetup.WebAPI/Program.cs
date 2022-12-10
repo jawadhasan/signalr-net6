@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
+using SignalRBasicSetup.WebAPI;
 using SignalRBasicSetup.WebAPI.Chat;
 using SignalRBasicSetup.WebAPI.Hubs;
 
@@ -12,7 +13,7 @@ builder.WebHost.ConfigureKestrel(options =>
 // Add services to the container.
 builder.Services.AddCors();
 
-
+builder.Services.AddSingleton<PresenceTracker>();
 //builder.Services.AddSignalR();
 
 //signalr with hubfilter on chathub.
