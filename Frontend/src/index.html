@@ -27,12 +27,11 @@
       <!-- Chat Area -->
       <div id="chatArea" class="col col-md-6  bg-light">
 
+        <!-- Welcome -->
         <div class="bg-dark">
           <span data-bind="text: title" class="text-white"></span>&nbsp;
           <span class="fa fa-signal text-success" data-bind="visible:signalRConnected"></span>
-
-          <h4 data-bind="text:`Welcome ` + `${nick()}`, visible:isJoined" class="text-white"></h4>
-          <!-- <span class="btn btn-primary" data-bind="visible: isJoined(), click: leave">Leave</span> -->
+          <h4 data-bind="text:`Welcome ` + `${nick()}`, visible:isJoined" class="text-white"></h4>         
         </div>
 
         <!-- NickName & Join -->
@@ -77,8 +76,7 @@
           <button class="btn btn-info" data-bind="visible: isJoined(), click: getChatHistory">Chat-History</button>
         </form>    
 
-      </div>
-      <!-- End Chat Area -->
+      </div><!-- End Chat Area -->
 
       <!--online users  -->
       <div id="onlineArea" class="col col-md-4">
@@ -87,41 +85,13 @@
           <div>
             <span class="fa fa-user"></span> &nbsp; <span data-bind="text: $data"></span>
           </div>
-        </div>
-      
+        </div>      
       </div>
 
-    </div>
-    <!-- end row -->
+    </div> <!-- end row -->
 
 
-   
-
-
-
-    <div data-bind="visible:!isDebug">
-      <hr />
-
-      <div class="form">
-        <form data-bind="submit: sendinput">
-          <fieldset><input type="text" data-bind="value: myinput" placeholder="enter message" /></fieldset>
-        </form>
-      </div>
-      <ul data-bind="foreach: messages">
-        <li>
-          <span data-bind="text: $index"></span>:
-          <span data-bind="text: $data" class="white"></span>
-        </li>
-      </ul>
-
-    </div>
-
-
-
-
-
-  </div>
-  <!-- end indexPage -->
+  </div><!-- end indexPage -->
 
   <!-- App Code -->
   <script src="./index.js"></script>
