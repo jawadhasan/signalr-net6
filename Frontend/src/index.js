@@ -26,64 +26,94 @@ export class DemoApp {
 
     var self = this;
     this.isDebug = ko.observable(false); //hiding test area
-    this.pageAlert = ko.observable("");
-
-
-    this.signalRConnected = ko.observable(false);
 
     this.title = ko.observable('Chat Room');
+    this.pageAlert = ko.observable("");
+
+    this.signalRConnected = ko.observable(false);
+    this.connectionId = ko.observable("");
     this.nick = ko.observable("");
     this.isJoined = ko.observable(false);
     this.messageText = ko.observable("");
     this.chatMessages = ko.observableArray([]);
 
+    this.onlineUsers = ko.observableArray([]);
+
     //for log-messages
     this.messages = ko.observableArray([]);
     this.myinput = ko.observable(),
 
+
+
+
       //signalR Connection
-      this.connection = new signalR.HubConnectionBuilder()
-        // .withUrl("http://localhost:5229/productHub")
-        //.withUrl("http://localhost:5000/productHub")
-        .withUrl("https://signalrbasicsetup.r8lru52odt8au.eu-central-1.cs.amazonlightsail.com/productHub")
+      this.connection = new signalR.HubConnectionBuilder()       
+        //.withUrl("http://localhost:5000/chatHub")
+       .withUrl("https://signalrbasicsetup.r8lru52odt8au.eu-central-1.cs.amazonlightsail.com/chatHub")
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
     //SignalR EventWiring
-    this.connection.onclose(async () => {
+    this.connection.onclose(async () => {      
       console.log('SignalR connection closed.')
+      this.connectionId("");
       this.signalRConnected(false);
       this.pageAlert("SignalR connection closed.")
-      self.start();
+      setTimeout(self.start, 5000);
     }, function (d) {
       console.log('some starterror', d);
     });
+    
 
     //method wiring which server will call
-    this.connection.on("methodOnClient", data => {
-      //self
-      this.handleMethodOnClient(data);
+  
+
+    this.connection.on("signalRConnected", data => {
+      console.log('signalRConnected', data);
+      this.connectionId(data.user);
+      this.pageAlert(`signalR connection id ${this.connectionId()}`);
     });
+
+
+    this.connection.on("onlineUsers", data => {
+      console.log('onlineUsers', data);
+      self.onlineUsers.removeAll();   
+      //looping through array
+      ko.utils.arrayForEach(data, function (item) {
+        self.onlineUsers.unshift(item);
+      });
+    });
+
+
     this.connection.on("userJoined", data => {
       console.log('userJoined', data);
       this.chatMessages.push(data);
     });
+
+    this.connection.on("setNickName", data => {
+      console.log('setNickName', data);
+      this.nick(data);
+      this.isJoined(true);
+      localStorage.setItem("localnick", this.nick());     
+    });
+    
+
     this.connection.on("chatMsgReceived", data => {
       console.log('chatMsgReceived', data);
       //this.chatMessages.push(data);
       this.chatMessages.unshift(data);// inserts a new item at the beginning of the array
 
     });
-    this.connection.on("chatHistReceived", data => {    
 
+
+    this.connection.on("chatHistReceived", data => {
       //looping through array
-      ko.utils.arrayForEach(data, function(item) { 
-          self.chatMessages.unshift(item); 
-    });
-  
+      ko.utils.arrayForEach(data, function (item) {
+        self.chatMessages.unshift(item);
+      });
     });
 
-    
+
 
     // Load the stuff from local storage
     let localNick = localStorage.getItem("localnick");
@@ -94,40 +124,30 @@ export class DemoApp {
   }
 
 
-  handleMethodOnClient(msg) {
-    console.log(`method-handler on DemoApp.${msg}`);  
-    this.messages.push(msg);
-  }
-
-
   //start signalR connection
   start() {
     try {
 
-      this.connection.start(() => {       
+      this.connection.start(() => {
         console.log(`connection started.`);
-      }).then(() => {      
+      }).then(() => {
         console.log(`SignalR connected.`);
         this.signalRConnected(true);
         this.pageAlert("SignalR connected.")
-        this.connection.invoke("SendMessageToAll", "hello-FromBrowser")
+
       });
 
 
     } catch (err) {
-      console.log(err);
-      this.pageAlert(err);
-      setTimeout(start, 5000);
+      console.log(err);      
+      setTimeout(this.start, 5000);
     }
   };
 
 
   //Actions triggered from UI Buttons
   join() {
-    this.connection.invoke("Join", this.nick())
-    this.isJoined(true);
-    localStorage.setItem("localnick", this.nick());
-    this.connection.invoke("GetChatHistory");
+    this.connection.invoke("Join", this.nick(), this.connectionId());   
   }
 
   say() {
@@ -139,7 +159,7 @@ export class DemoApp {
     this.chatMessages.removeAll();
   }
 
-  getChatHistory(){
+  getChatHistory() {
     this.connection.invoke("GetChatHistory");
   }
   leave() {
