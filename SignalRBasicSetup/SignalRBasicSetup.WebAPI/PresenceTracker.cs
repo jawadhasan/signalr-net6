@@ -14,7 +14,7 @@
 
             lock (onlineUsers)
             {
-                if (!onlineUsers.ContainsKey(userId))
+                if (!onlineUsers.ContainsKey(userId) && userId != "system")
                 {
                     available = true;
                 }

@@ -34,8 +34,6 @@ public class ChatHub : Hub
         }
         await base.OnConnectedAsync();
     }
-
-
     public override async Task OnDisconnectedAsync(Exception exception)
     {
         var user = Context.User.Identity.Name ?? Context.ConnectionId;
@@ -93,7 +91,6 @@ public class ChatHub : Hub
         var currentUsers = await _presenceTracker.GetOnlineUsers();
         await Clients.All.SendAsync("onlineUsers", currentUsers);
     }
-
     public async Task Say(string user, string text)
     {
         var msgEvent = new ChatEvent(user, EventType.MESSAGE, text);
@@ -102,14 +99,11 @@ public class ChatHub : Hub
         ChatRoom.GetInstance().AddEvent(msgEvent);
         await Clients.All.SendAsync("chatMsgReceived", msgEvent);
     }
-
     public async Task GetChatHistory()
     {
         var hist = ChatRoom.GetInstance().GetChatHistory();
         await Clients.All.SendAsync("chatHistReceived", hist);
     }
-
-
 
     public async Task SendMessageToAll(string user, string msg)
     {

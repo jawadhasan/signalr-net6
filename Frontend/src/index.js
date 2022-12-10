@@ -87,7 +87,7 @@ export class DemoApp {
 
     this.connection.on("userJoined", data => {
       console.log('userJoined', data);
-      this.chatMessages.push(data);
+      this.chatMessages.unshift(data)
     });
 
     this.connection.on("setNickName", data => {
