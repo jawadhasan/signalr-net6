@@ -35,6 +35,8 @@ node_modules
 .vs/
 /wwwroot/dist/
 /ClientApp/dist/
+dist/
+NDependOut
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -176,7 +178,7 @@ BundleArtifacts/
 # files ending in .cache can be ignored
 *.[Cc]ache
 # but keep track of directories ending in .cache
-!*.[Cc]ache/
+#!*.[Cc]ache/
 
 # Others
 ClientBin/
@@ -240,3 +242,4 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+/SignalRBasicSetup/SignalRBasicSetup.ndproj

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.SignalR;
-using SignalRBasicSetup.WebAPI;
 using SignalRBasicSetup.WebAPI.Chat;
 using SignalRBasicSetup.WebAPI.Hubs;
 
