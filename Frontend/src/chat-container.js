@@ -44,12 +44,28 @@ const ChatContainer = () => {
 
         if (connection) {
 
-            console.log('useeffect called.')
+            console.log('connection useEffect called.')
+
+
+            connection.onclose(async () => {
+
+                const notice = `SignalR connection closed. Refresh Page to Start.`;
+                console.log(notice);
+                setConnectionId("");
+                setInfoMsg(notice)
+                setIsConnected(false);
+                // setTimeout(self.start, 5000);
+            }, function (d) {
+                console.log('onclose', d);
+            });
+
 
             // connection.on('signalRConnected', data => {
             //     console.log('server:signalRConnected', data);              
             //     handleConnected(data);
             // });
+
+
 
             connection.on("signalRConnected", (e) => handleConnected(e));
 
@@ -118,7 +134,8 @@ const ChatContainer = () => {
 
     const handleChatHistRcvd = (data) => {
         clearChat();
-        setChat(data);
+
+        setChat(data.reverse());
     }
 
     const updateChatMsgs = (data) => {
@@ -155,39 +172,46 @@ const ChatContainer = () => {
                 <PageAlert message={infoMsg} />
             </div>
 
-            <div className="col col-md-6">
-
-                {isConnected && !isJoined && <JoinForm user={user} onJoin={onJoin} />}
-
-                {isJoined &&
-
-                    <div>
-                        <h4 className="bg-dark text-white">Welcome, {user.nick}</h4>
-                    </div>
-                }
-
-                <ChatMessages messages={chat} mynick={user.nick} />
-
-                {isJoined &&
-
-                    <div>
-                        <ChatInput sendMessage={say} /> 
-                        <hr />
-                        <button className="btn btn-warning" onClick={clearChat}>Clear</button>
-                        <button className="btn btn-info" onClick={getChatHistory}>Chat-History</button>
-
-                    </div>
-                }
-
+            <div className="col col-md-12 mb-3">
+                <i>Powered By: </i>
+                <a className="text-primary" href="https://awsclouddemos.com/" target="_blank">awsclouddemos.com</a> |
+                <a className="text-primary" href="https://hexquote.com/" target="_blank"> hexquote.com</a>
             </div>
 
+          
+                <div className="col col-md-6 bg-light">
 
-            <div className="col col-md-6 bg-light">
-                <OnlineUsers users={users} />
-            </div>
+                    {isConnected && !isJoined && <JoinForm user={user} onJoin={onJoin} />}
 
-            {/* <ChatWindow chat={chat} /> */}
+                    {isJoined &&
 
+                        <div>
+                            <h4 className="bg-dark text-white">Welcome, {user.nick}</h4>
+                        </div>
+                    }
+
+                    <ChatMessages messages={chat} mynick={user.nick} />
+
+                    {isJoined &&
+
+                        <div>
+                            <ChatInput sendMessage={say} />
+                            <hr />
+                            <button className="btn btn-warning" onClick={clearChat}>Clear</button>
+                            <button className="btn btn-info" onClick={getChatHistory}>Chat-History</button>
+
+                        </div>
+                    }
+
+                </div>
+
+
+                <div className="col col-md-6 bg-light">
+                    <OnlineUsers users={users} />
+                </div>
+
+                {/* <ChatWindow chat={chat} /> */}
+           
         </div>
     );
 }

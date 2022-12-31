@@ -9,8 +9,7 @@ const JoinForm = (props) => {
       };
 
     return (
-        <div className="form-inline">
-        
+        <div className="form-inline bg-dark">         
             <input
                 required
                 type="text"
